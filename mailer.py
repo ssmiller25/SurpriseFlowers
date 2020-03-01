@@ -12,6 +12,16 @@ try:
     password = settings.PASSWORD
     fromaddr = settings.FROMADDR
     toaddr = settings.TOADDR
+    if settings.SMTPSERVER:
+      smtpserver=settings.SMTPSERVER
+    else:
+      smtpserver='smtp.gmail.com'
+
+    if settings.SMTPPORT:
+      smtpport=int(settings.SMTPPORT)
+    else:
+      smtpport=587
+
     msg = settings.EMAIL_MESSAGE
 except ImportError as e:
     raise("COULDNT IMPORT LOCAL SETTINGS: %s" % e)
@@ -21,7 +31,7 @@ def send_email():
     """Generate and send email."""
 
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP(smtpserver, smtpport)
         server.starttls()
         server.login(fromaddr, password)
         server.sendmail(fromaddr, toaddr, msg)
